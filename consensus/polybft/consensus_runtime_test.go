@@ -243,6 +243,7 @@ func TestConsensusRuntime_OnBlockInserted_EndOfEpoch(t *testing.T) {
 		checkpointManager:    &dummyCheckpointManager{},
 		stakeManager:         &dummyStakeManager{},
 		governanceManager:    &dummyGovernanceManager{},
+		stateSyncRelayer:     &dummyStakeSyncRelayer{},
 		doubleSigningTracker: tracker,
 	}
 	runtime.OnBlockInserted(&types.FullBlock{Block: builtBlock})

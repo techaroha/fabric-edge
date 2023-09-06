@@ -63,6 +63,12 @@ type Config struct {
 
 	// Path is the directory path for the consensus protocol to store information
 	Path string
+
+	// IsRelayer is true if node is relayer
+	IsRelayer bool
+
+	// RPCEndpoint
+	RPCEndpoint string
 }
 
 type Params struct {
