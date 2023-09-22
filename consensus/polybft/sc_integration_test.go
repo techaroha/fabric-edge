@@ -229,8 +229,7 @@ func TestIntegratoin_PerformExit(t *testing.T) {
 	res := getField(exitHelperContractAddress, contractsapi.ExitHelper.Abi, "processedExits", exits[0].ID)
 	require.Equal(t, 0, int(res[31]))
 
-	var exitEventAPI contractsapi.L2StateSyncedEvent
-	proofExitEvent, err := exitEventAPI.Encode(exits[0].L2StateSyncedEvent)
+	proofExitEvent, err := exits[0].L2StateSyncedEvent.Encode()
 	require.NoError(t, err)
 
 	proof, err := exitTree.GenerateProof(proofExitEvent)
