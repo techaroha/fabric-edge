@@ -44,6 +44,7 @@ const (
 	defaultEpochReward              = 1
 	defaultBlockTimeDrift           = uint64(10)
 	defaultBlockTrackerPollInterval = time.Second
+	defaultMetricsInterval          = time.Second * 0 // disabled
 
 	contractDeployerAllowListAdminFlag   = "contract-deployer-allow-list-admin"
 	contractDeployerAllowListEnabledFlag = "contract-deployer-allow-list-enabled"
@@ -159,6 +160,7 @@ func (p *genesisParams) generatePolyBftChainConfig(o command.OutputFormatter) er
 		BlockTimeDrift:           p.blockTimeDrift,
 		BlockTrackerPollInterval: common.Duration{Duration: p.blockTrackerPollInterval},
 		ProxyContractsAdmin:      types.StringToAddress(p.proxyContractsAdmin),
+		MetricsInterval:          common.Duration{Duration: p.metricsInterval},
 	}
 
 	// Disable london hardfork if burn contract address is not provided

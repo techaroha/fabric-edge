@@ -62,6 +62,10 @@ type PolyBFTConfig struct {
 	// ProxyContractsAdmin is the address that will have the privilege to change both the proxy
 	// implementation address and the admin
 	ProxyContractsAdmin types.Address `json:"proxyContractsAdmin,omitempty"`
+
+	// MetricsInterval specifies interval
+	// at which metrics is generated. Zero means that metrics is disabled
+	MetricsInterval common.Duration `json:"metricsInterval,omitempty"`
 }
 
 // LoadPolyBFTConfig loads chain config from provided path and unmarshals PolyBFTConfig

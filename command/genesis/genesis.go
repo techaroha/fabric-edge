@@ -249,6 +249,13 @@ func setFlags(cmd *cobra.Command) {
 			defaultBlockTrackerPollInterval,
 			"interval (number of seconds) at which block tracker polls for latest block at rootchain",
 		)
+
+		cmd.Flags().DurationVar(
+			&params.metricsInterval,
+			metricsIntervalFlag,
+			defaultMetricsInterval,
+			"interval (number of seconds) at which special metrics is generated. zero means the metrics is disabled",
+		)
 	}
 
 	// Access Control Lists

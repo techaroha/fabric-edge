@@ -24,7 +24,10 @@ import (
 	"github.com/0xPolygon/polygon-edge/state"
 	"github.com/0xPolygon/polygon-edge/syncer"
 	"github.com/0xPolygon/polygon-edge/types"
+	metrics "github.com/armon/go-metrics"
 	"github.com/hashicorp/go-hclog"
+	"github.com/umbracle/ethgo"
+	"github.com/umbracle/ethgo/jsonrpc"
 )
 
 const (
@@ -558,6 +561,11 @@ func (p *Polybft) initRuntime() error {
 func (p *Polybft) startRuntime() error {
 	go p.startConsensusProtocol()
 
+	// zero means metrics is disabled
+	if metricsInterval := p.consensusConfig.MetricsInterval.Duration; metricsInterval > 0 {
+		go p.metricsLoop(p.consensusConfig.Bridge.JSONRPCEndpoint, metricsInterval)
+	}
+
 	return nil
 }
 
@@ -659,6 +667,39 @@ func (p *Polybft) waitForNPeers() bool {
 	}
 
 	return true
+}
+
+func (p *Polybft) metricsLoop(rootnodeUrl string, interval time.Duration) {
+	validatorAddress := p.key.Address()
+	gweiPerWei := new(big.Int).Exp(big.NewInt(10), big.NewInt(9), nil) // 10^9
+
+	ticker := time.NewTicker(interval)
+	defer ticker.Stop()
+
+	rpcClient, err := jsonrpc.NewClient(rootnodeUrl)
+	if err != nil {
+		p.logger.Error("metrics failed", "err", err)
+
+		return
+	}
+
+	for {
+		select {
+		case <-p.closeCh:
+			return
+		case <-ticker.C:
+			balance, err := rpcClient.Eth().GetBalance(validatorAddress, ethgo.Latest)
+			if err != nil {
+				p.logger.Error("metrics get balance call failed", "err", err)
+
+				continue
+			}
+
+			balanceInGwei := new(big.Int).Div(balance, gweiPerWei).Uint64()
+			metrics.SetGauge([]string{"bridge", "validator_balance_gwei", validatorAddress.String()},
+				float32(balanceInGwei))
+		}
+	}
 }
 
 // Close closes the connection

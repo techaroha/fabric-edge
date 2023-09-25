@@ -42,6 +42,7 @@ const (
 	rewardWalletFlag             = "reward-wallet"
 	blockTrackerPollIntervalFlag = "block-tracker-poll-interval"
 	proxyContractsAdminFlag      = "proxy-contracts-admin"
+	metricsIntervalFlag          = "metrics-interval"
 
 	defaultNativeTokenName     = "Polygon"
 	defaultNativeTokenSymbol   = "MATIC"
@@ -138,6 +139,8 @@ type genesisParams struct {
 	blockTrackerPollInterval time.Duration
 
 	proxyContractsAdmin string
+
+	metricsInterval time.Duration
 }
 
 func (p *genesisParams) validateFlags() error {
