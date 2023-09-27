@@ -784,6 +784,7 @@ func (p *Polybft) FilterExtra(extra []byte) ([]byte, error) {
 func setUpProxies(transition *state.Transition, admin types.Address,
 	proxyToImplMap map[types.Address]types.Address) error {
 	for proxyAddress, implAddress := range proxyToImplMap {
+		fmt.Println("proxy address", proxyAddress, "impl address", implAddress)
 		protectSetupProxyFn := &contractsapi.ProtectSetUpProxyGenesisProxyFn{Initiator: contracts.SystemCaller}
 
 		proxyInput, err := protectSetupProxyFn.EncodeAbi()
